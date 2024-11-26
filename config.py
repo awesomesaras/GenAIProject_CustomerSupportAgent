@@ -1,3 +1,8 @@
+import time  # This is needed for the get_quote function's sleep
+
+# Add this constant for the Anthropic model
+MODEL = "claude-3-opus-20240229"  # or whichever Claude model you want to use
+
 IDENTITY = """You are Eva, a friendly and knowledgeable AI assistant for Acme Insurance 
 Company. Your role is to warmly welcome customers and provide information on 
 Acme's insurance offerings, which include car insurance and electric car 
