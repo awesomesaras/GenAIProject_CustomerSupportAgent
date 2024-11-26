@@ -27,7 +27,7 @@ class ChatBot:
                 system=IDENTITY,
                 max_tokens=max_tokens,
                 messages=message_list,
-                tools=TOOLS,
+                # Removed the tools parameter
             )
             return response
         except Exception as e:
@@ -46,37 +46,6 @@ class ChatBot:
 
         try:
             content = response_message.content
-            if len(content) > 0 and hasattr(content[-1], 'type'):
-                if content[-1].type == "tool_calls":
-                    tool_use = content[-1]
-                    func_name = tool_use.tool_calls[0].function.name
-                    func_params = tool_use.tool_calls[0].function.arguments
-                    tool_call_id = tool_use.tool_calls[0].id
-
-                    result = self.handle_tool_use(func_name, func_params)
-                    self.session_state.messages.append(
-                        {"role": "assistant", "content": content}
-                    )
-                    self.session_state.messages.append({
-                        "role": "tool",
-                        "content": result,
-                        "tool_call_id": tool_call_id,
-                    })
-
-                    follow_up_response = self.generate_message(
-                        messages=self.session_state.messages,
-                        max_tokens=2048,
-                    )
-
-                    if "error" in follow_up_response:
-                        return f"An error occurred: {follow_up_response['error']}"
-
-                    response_text = follow_up_response.content[0].text
-                    self.session_state.messages.append(
-                        {"role": "assistant", "content": response_text}
-                    )
-                    return response_text
-                
             response_text = content[0].text
             self.session_state.messages.append(
                 {"role": "assistant", "content": response_text}
